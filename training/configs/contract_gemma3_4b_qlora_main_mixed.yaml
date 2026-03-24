@@ -1,0 +1,33 @@
+run_name: contract_gemma3_4b_qlora_main_mixed_v1
+domain: contract
+model_name: unsloth/gemma-3-4b-it
+dataset:
+  train_path: data/processed/contract_main_mixed/train.jsonl
+  val_path: data/processed/contract_main_mixed/val.jsonl
+  test_path: data/processed/contract_main_mixed/test.jsonl
+output_dir: training/outputs/contract_gemma3_4b_qlora_main_mixed_v1
+adapter_output_dir: adapters/contract/contract_gemma3_4b_qlora_main_mixed_v1
+max_seq_length: 2048
+load_in_4bit: true
+seed: 3407
+lora:
+  r: 8
+  alpha: 16
+  dropout: 0.0
+  bias: none
+  gradient_checkpointing: unsloth
+trainer:
+  per_device_train_batch_size: 2
+  per_device_eval_batch_size: 2
+  gradient_accumulation_steps: 4
+  warmup_ratio: 0.1
+  num_train_epochs: 2
+  learning_rate: 0.0002
+  weight_decay: 0.01
+  logging_steps: 5
+  eval_steps: 50
+  save_steps: 100
+  max_steps: -1
+  optim: adamw_8bit
+  lr_scheduler_type: cosine
+  packing: false
