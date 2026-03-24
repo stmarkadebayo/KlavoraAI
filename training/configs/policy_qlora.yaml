@@ -1,0 +1,42 @@
+run_name: policy_qlora_v1
+domain: policy
+model_name: Qwen/Qwen3-8B
+dataset:
+  train_path: data/processed/policy/train.jsonl
+  val_path: data/processed/policy/val.jsonl
+  test_path: data/processed/policy/test.jsonl
+output_dir: training/outputs/policy_qlora_v1
+adapter_output_dir: adapters/policy/policy_qlora_v1
+max_seq_length: 2048
+load_in_4bit: true
+seed: 3407
+lora:
+  r: 16
+  alpha: 32
+  dropout: 0.0
+  bias: none
+  gradient_checkpointing: unsloth
+  target_modules:
+    - q_proj
+    - k_proj
+    - v_proj
+    - o_proj
+    - gate_proj
+    - up_proj
+    - down_proj
+trainer:
+  per_device_train_batch_size: 2
+  per_device_eval_batch_size: 2
+  gradient_accumulation_steps: 8
+  warmup_ratio: 0.1
+  num_train_epochs: 3
+  learning_rate: 0.0002
+  weight_decay: 0.01
+  logging_steps: 1
+  eval_steps: 10
+  save_steps: 25
+  max_steps: -1
+  optim: adamw_8bit
+  lr_scheduler_type: cosine
+  packing: false
+
