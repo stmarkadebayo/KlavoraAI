@@ -937,3 +937,59 @@ Build this exact version first:
 
 That scope is large enough to be impressive and small enough to finish well.
 
+
+## DATASETS NEEDED
+
+For v1, you need 2 training datasets, not one giant mixed dataset:
+
+1. `contract` adapter dataset
+2. `policy` adapter dataset
+
+Inside each one, you should have 2 task subsets:
+
+- extraction examples
+- summary examples
+
+So conceptually the full data plan is 4 dataset buckets:
+
+1. contract extraction
+2. contract summarization
+3. policy extraction
+4. policy summarization
+
+For actual project execution, I’d stage it like this:
+
+Phase 1:
+- contract extraction dataset
+- policy extraction dataset
+
+Phase 2:
+- contract summary dataset
+- policy summary dataset
+
+That is enough for the main fine-tuning plan.
+
+If you mean raw source datasets from outside:
+- Contract side: start with `CUAD`, then optionally `legal_summarization`, `ContractNLI`, `LEDGAR`
+- Policy side: start with `OPP-115`, then optionally `ToS-Summaries`, `PrivacyQA`, `PolicyQA`
+
+So minimum external sources for a serious v1 start:
+- 2 core source datasets: `CUAD` and `OPP-115`
+
+Better practical v1:
+- 4 core-ish sources:
+  - `CUAD`
+  - `legal_summarization`
+  - `OPP-115`
+  - `ToS-Summaries`
+
+My recommendation:
+- Don’t try to collect everything first.
+- Build 1 solid dataset first: `contract extraction`.
+- Then add `policy extraction`.
+- Only after that, add the 2 summary datasets.
+
+So the shortest answer is:
+- Total training datasets for the product design: 4
+- Minimum raw source datasets to start real work: 2
+- Best realistic v1 source coverage: about 4 to 8 sources over time
