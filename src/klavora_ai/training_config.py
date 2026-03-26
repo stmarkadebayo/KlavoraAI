@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Literal, Optional, Union
+from typing import Any, Literal, Optional, Union
 
 from pydantic import Field
 
@@ -53,16 +53,21 @@ class TrainerConfig(StrictModel):
 class UnslothTrainingConfig(StrictModel):
     run_name: str
     domain: Literal["policy", "contract"]
-    tier: Literal["sanity", "main"] = "main"
+    tier: Literal["sanity", "main", "demo", "standard"] = "main"
     model_name: str
     dataset: DatasetPaths
     output_dir: str
     adapter_output_dir: str
     max_seq_length: int = 1024
     load_in_4bit: bool = True
+    full_finetuning: bool = False
     seed: int = 3407
-    chat_template: str = "gemma-3"
+    chat_template: str = "chatml"
+    chat_template_kwargs: dict[str, Any] = Field(default_factory=dict)
+    apply_chat_template_kwargs: dict[str, Any] = Field(default_factory=dict)
     response_only: bool = True
+    response_only_instruction_part: str = "<|im_start|>user\n"
+    response_only_response_part: str = "<|im_start|>assistant\n"
     preflight_max_removed_fraction: float = 0.10
     preflight_max_p95_tokens: int = 1125
     max_train_samples: Optional[int] = None

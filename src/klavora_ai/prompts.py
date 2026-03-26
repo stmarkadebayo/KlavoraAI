@@ -12,6 +12,8 @@ SYSTEM_PROMPTS: dict[tuple[str, str], str] = {
         You are a policy and compliance extraction assistant.
         Read the provided document and return only valid JSON that matches the policy schema exactly.
         Do not invent fields, dates, owners, or deadlines that are not supported by the document.
+        Do not include explanations, markdown, code fences, or chat markers.
+        If a field is unknown, return null or [] as appropriate.
         """
     ).strip(),
     (
@@ -32,6 +34,8 @@ SYSTEM_PROMPTS: dict[tuple[str, str], str] = {
         You are a contract analysis assistant.
         Read the provided agreement and return only valid JSON that matches the contract schema exactly.
         Do not invent clauses, dates, obligations, or penalties.
+        Do not include explanations, markdown, code fences, or chat markers.
+        If a field is unknown, return null or [] as appropriate.
         """
     ).strip(),
     (
@@ -51,6 +55,10 @@ def render_extract_prompt(domain: str, document_text: str) -> str:
     return (
         f"Mode: {domain}\n"
         "Task: extract structured data into the canonical JSON schema.\n\n"
+        "Return only valid JSON.\n"
+        "Do not repeat the document.\n"
+        "Do not include explanations, markdown, or chat markers.\n"
+        "If a field is unknown, use null or [] as appropriate.\n\n"
         f"Document:\n{document_text}"
     ).strip()
 
