@@ -143,8 +143,14 @@ def _run_training(config: UnslothTrainingConfig, config_path: Path) -> None:
         max_seq_length=config.max_seq_length,
         dtype=None,
         load_in_4bit=config.load_in_4bit,
+        full_finetuning=config.full_finetuning,
     )
-    tokenizer = get_chat_template(tokenizer, chat_template=config.chat_template)
+    if config.chat_template:
+        tokenizer = get_chat_template(
+            tokenizer,
+            chat_template=config.chat_template,
+            **config.chat_template_kwargs,
+        )
 
     def _format_batch(batch: dict[str, list[Any]]) -> dict[str, list[str]]:
         texts: list[str] = []
@@ -153,6 +159,7 @@ def _run_training(config: UnslothTrainingConfig, config_path: Path) -> None:
                 _normalize_messages_for_chat(messages),
                 tokenize=False,
                 add_generation_prompt=False,
+                **config.apply_chat_template_kwargs,
             )
             texts.append(rendered.removeprefix("<bos>"))
         return {"text": texts}
@@ -232,8 +239,8 @@ def _run_training(config: UnslothTrainingConfig, config_path: Path) -> None:
         eval_before = len(trainer.eval_dataset) if trainer.eval_dataset is not None else 0
         trainer = train_on_responses_only(
             trainer,
-            instruction_part="<start_of_turn>user\n",
-            response_part="<start_of_turn>model\n",
+            instruction_part=config.response_only_instruction_part,
+            response_part=config.response_only_response_part,
         )
         train_after = len(trainer.train_dataset)
         eval_after = len(trainer.eval_dataset) if trainer.eval_dataset is not None else 0

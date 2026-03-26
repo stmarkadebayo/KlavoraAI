@@ -1,4 +1,11 @@
-# Unsloth Colab: Gemma 3 (4B)
+# Legacy Unsloth Colab: Gemma 3 (4B)
+
+This document is archived for older runs only. The default tutorial path for this repo is now:
+
+- `Qwen3 4B` primary
+- `Llama 3.2 3B` fallback
+
+Use the current runbooks instead of this file unless you are reproducing an older Gemma experiment.
 
 This is the exact path to use for the first fine-tuning run.
 
