@@ -1,0 +1,165 @@
+{
+  "chunk_count": 4094,
+  "demo_selection": {
+    "base_quality_report": {
+      "chunk_count": 4094,
+      "document_count": 509,
+      "example_count": 4094,
+      "field_coverage": {
+        "action_items": 0,
+        "confidentiality_terms": 195,
+        "contract_type": 4094,
+        "effective_date": 383,
+        "key_obligations": 3160,
+        "liability_or_penalty_terms": 752,
+        "parties": 3883,
+        "payment_terms": 1468,
+        "renewal_terms": 339,
+        "risk_flags": 1344,
+        "termination_date": 87,
+        "termination_terms": 1314
+      },
+      "max_tokens": 1024,
+      "raw_text_sources": {
+        "full_text": 0,
+        "joined_clauses": 509
+      },
+      "response_truncation_risk": {
+        "count": 239,
+        "rate": 0.0584
+      },
+      "target_chunk_tokens": 800,
+      "token_length_estimate_post_truncation": {
+        "avg": 679.05,
+        "count": 4094,
+        "max": 1024,
+        "min": 67,
+        "p50": 711,
+        "p95": 1024
+      },
+      "token_length_estimate_pre_truncation": {
+        "avg": 684.48,
+        "count": 4094,
+        "max": 1536,
+        "min": 67,
+        "p50": 711,
+        "p95": 1041
+      }
+    },
+    "domain": "contract",
+    "field_coverage": {
+      "confidentiality_terms": 29,
+      "effective_date": 280,
+      "key_obligations": 615,
+      "parties": 749,
+      "payment_terms": 311,
+      "renewal_terms": 132,
+      "termination_terms": 370
+    },
+    "filter_settings": {
+      "max_test_examples": 80,
+      "max_token_estimate": 1024,
+      "max_train_examples": 600,
+      "max_val_examples": 80,
+      "min_label_confidence": "medium",
+      "min_populated_fields": 2
+    },
+    "filter_steps": {
+      "label_confidence_threshold": {
+        "after": 2959,
+        "before": 3855,
+        "dropped": 896
+      },
+      "max_token_estimate": {
+        "after": 2959,
+        "before": 2959,
+        "dropped": 0
+      },
+      "min_populated_fields": {
+        "after": 2646,
+        "before": 2959,
+        "dropped": 313
+      },
+      "task_extract_only": {
+        "after": 4094,
+        "before": 4094,
+        "dropped": 0
+      },
+      "truncation_risk_low": {
+        "after": 3855,
+        "before": 4094,
+        "dropped": 239
+      }
+    },
+    "kept_after_filtering": 2646,
+    "label_confidence_distribution": {
+      "high": 760,
+      "low": 0,
+      "medium": 0
+    },
+    "profile": "demo",
+    "selection_seed": 3407,
+    "split_counts_after_caps": {
+      "test": 80,
+      "train": 600,
+      "val": 80
+    },
+    "split_counts_before_caps": {
+      "test": 237,
+      "train": 2191,
+      "val": 218
+    },
+    "token_length_estimate": {
+      "avg": 655.52,
+      "count": 760,
+      "max": 1024,
+      "min": 88,
+      "p50": 764,
+      "p95": 1002
+    },
+    "total_candidates_before_filter": 4094
+  },
+  "document_count": 509,
+  "example_count": 4094,
+  "field_coverage": {
+    "action_items": 0,
+    "confidentiality_terms": 195,
+    "contract_type": 4094,
+    "effective_date": 383,
+    "key_obligations": 3160,
+    "liability_or_penalty_terms": 752,
+    "parties": 3883,
+    "payment_terms": 1468,
+    "renewal_terms": 339,
+    "risk_flags": 1344,
+    "termination_date": 87,
+    "termination_terms": 1314
+  },
+  "max_tokens": 1024,
+  "profile": "demo",
+  "raw_text_sources": {
+    "full_text": 0,
+    "joined_clauses": 509
+  },
+  "response_truncation_risk": {
+    "count": 239,
+    "rate": 0.0584
+  },
+  "target_chunk_tokens": 800,
+  "token_length_estimate_post_truncation": {
+    "avg": 679.05,
+    "count": 4094,
+    "max": 1024,
+    "min": 67,
+    "p50": 711,
+    "p95": 1024
+  },
+  "token_length_estimate_pre_truncation": {
+    "avg": 684.48,
+    "count": 4094,
+    "max": 1536,
+    "min": 67,
+    "p50": 711,
+    "p95": 1041
+  }
+}

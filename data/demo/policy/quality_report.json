@@ -1,0 +1,141 @@
+{
+  "chunk_count": 1352,
+  "demo_selection": {
+    "base_quality_report": {
+      "chunk_count": 1352,
+      "document_count": 115,
+      "example_count": 1352,
+      "field_coverage": {
+        "applies_to": 1352,
+        "effective_date": 69,
+        "key_obligations": 1348,
+        "required_actions": 523,
+        "risk_flags": 1226
+      },
+      "max_tokens": 1024,
+      "response_truncation_risk": {
+        "count": 11,
+        "rate": 0.0081
+      },
+      "target_chunk_tokens": 800,
+      "token_length_estimate_post_truncation": {
+        "avg": 765.54,
+        "count": 1352,
+        "max": 1024,
+        "min": 134,
+        "p50": 802,
+        "p95": 1005
+      },
+      "token_length_estimate_pre_truncation": {
+        "avg": 766.05,
+        "count": 1352,
+        "max": 1242,
+        "min": 134,
+        "p50": 802,
+        "p95": 1005
+      }
+    },
+    "domain": "policy",
+    "field_coverage": {
+      "applies_to": 628,
+      "effective_date": 56,
+      "key_obligations": 628,
+      "required_actions": 489,
+      "risk_flags": 613
+    },
+    "filter_settings": {
+      "max_test_examples": 64,
+      "max_token_estimate": 1024,
+      "max_train_examples": 500,
+      "max_val_examples": 64,
+      "min_label_confidence": "medium",
+      "min_populated_fields": 2
+    },
+    "filter_steps": {
+      "label_confidence_threshold": {
+        "after": 1341,
+        "before": 1341,
+        "dropped": 0
+      },
+      "max_token_estimate": {
+        "after": 1341,
+        "before": 1341,
+        "dropped": 0
+      },
+      "min_populated_fields": {
+        "after": 1338,
+        "before": 1341,
+        "dropped": 3
+      },
+      "task_extract_only": {
+        "after": 1352,
+        "before": 1352,
+        "dropped": 0
+      },
+      "truncation_risk_low": {
+        "after": 1341,
+        "before": 1352,
+        "dropped": 11
+      }
+    },
+    "kept_after_filtering": 1338,
+    "label_confidence_distribution": {
+      "high": 628,
+      "low": 0,
+      "medium": 0
+    },
+    "profile": "demo",
+    "selection_seed": 3407,
+    "split_counts_after_caps": {
+      "test": 64,
+      "train": 500,
+      "val": 64
+    },
+    "split_counts_before_caps": {
+      "test": 104,
+      "train": 1139,
+      "val": 95
+    },
+    "token_length_estimate": {
+      "avg": 772.29,
+      "count": 628,
+      "max": 1024,
+      "min": 272,
+      "p50": 822,
+      "p95": 1005
+    },
+    "total_candidates_before_filter": 1352
+  },
+  "document_count": 115,
+  "example_count": 1352,
+  "field_coverage": {
+    "applies_to": 1352,
+    "effective_date": 69,
+    "key_obligations": 1348,
+    "required_actions": 523,
+    "risk_flags": 1226
+  },
+  "max_tokens": 1024,
+  "profile": "demo",
+  "response_truncation_risk": {
+    "count": 11,
+    "rate": 0.0081
+  },
+  "target_chunk_tokens": 800,
+  "token_length_estimate_post_truncation": {
+    "avg": 765.54,
+    "count": 1352,
+    "max": 1024,
+    "min": 134,
+    "p50": 802,
+    "p95": 1005
+  },
+  "token_length_estimate_pre_truncation": {
+    "avg": 766.05,
+    "count": 1352,
+    "max": 1242,
+    "min": 134,
+    "p50": 802,
+    "p95": 1005
+  }
+}
