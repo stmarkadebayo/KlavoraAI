@@ -1,35 +1,60 @@
 # Policy Data Pipeline
 
-The policy-side extraction scaffold now uses OPP-115 directly:
+The policy data path also has two output tiers:
 
-- [ingest_opp115.py](/Users/mac/Desktop/KlavoraAI/scripts/ingest_opp115.py)
-- [build_policy_examples.py](/Users/mac/Desktop/KlavoraAI/scripts/build_policy_examples.py)
+- `standard`: full processed chunked dataset under `data/processed/policy_main`
+- `demo`: deterministic filtered subset under `data/demo/policy`
 
-## What it uses
+Main scripts:
 
-`ingest_opp115.py`
+- `scripts/ingest_opp115.py`
+- `scripts/build_policy_examples.py`
 
-- reads [sanitized_policies](/Users/mac/Desktop/KlavoraAI/data/raw/opp-115/sanitized_policies)
-- reads [pretty_print](/Users/mac/Desktop/KlavoraAI/data/raw/opp-115/pretty_print) when available, then falls back to [pretty_print_uniquified](/Users/mac/Desktop/KlavoraAI/data/raw/opp-115/pretty_print_uniquified)
-- builds normalized policy documents with:
-  - cleaned raw policy text
-  - segment-level privacy practice summaries
-  - weak extraction targets mapped to the project schema
+## What The Builder Does
 
-`build_policy_examples.py`
+`build_policy_examples.py`:
 
-- converts normalized policy documents into chunked extraction examples
-- preserves `source_doc_id`, `chunk_id`, source spans, and quality flags
-- writes train/val/test splits under [policy_main](/Users/mac/Desktop/KlavoraAI/data/processed/policy_main)
-- writes a dataset quality report at [quality_report.json](/Users/mac/Desktop/KlavoraAI/data/processed/policy_main/quality_report.json)
+- converts normalized OPP-115 documents into chunked extraction examples
+- preserves `source_doc_id`, `chunk_id`, source spans, token estimates, and quality flags
+- can emit the full `standard` tier or the filtered `demo` tier
+- writes train/val/test splits, a manifest, and a quality report
 
-## Recommended run order
+## Standard Build
 
 ```bash
-python3 scripts/ingest_opp115.py
-python3 scripts/build_policy_examples.py --target-chunk-tokens 800 --max-tokens 1024
+python3 scripts/build_policy_examples.py --profile standard
 ```
 
-## Important caveat
+Writes:
 
-This first OPP-115 builder is extraction-focused and weakly supervised. It uses the policy text plus the corpus' human-readable privacy-practice summaries, but it does not yet add a real summary dataset like ToS-Summaries. That should be the next policy-side data addition after extraction is stable.
+- `data/processed/policy_main/train.jsonl`
+- `data/processed/policy_main/val.jsonl`
+- `data/processed/policy_main/test.jsonl`
+- `data/processed/policy_main/manifest.json`
+- `data/processed/policy_main/quality_report.json`
+
+## Demo Build
+
+```bash
+python3 scripts/build_policy_examples.py --profile demo
+```
+
+Writes:
+
+- `data/demo/policy/train.jsonl`
+- `data/demo/policy/val.jsonl`
+- `data/demo/policy/test.jsonl`
+- `data/demo/policy/manifest.json`
+- `data/demo/policy/quality_report.json`
+
+## Demo Filters
+
+The demo tier keeps only:
+
+- extraction rows
+- low truncation risk
+- medium/high weak-label confidence
+- `token_count_estimate <= 1024`
+- at least 2 populated target fields
+
+Policy remains extraction-only in the tutorial path. Summary tuning stays out of the default flow.
