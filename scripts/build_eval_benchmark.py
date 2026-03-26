@@ -65,6 +65,31 @@ def build_benchmark(rows: list[dict], limit: int) -> list[dict]:
         )
         if len(selected) >= limit:
             break
+    if len(selected) < limit:
+        selected_ids = {row["example_id"] for row in selected}
+        for row in ordered:
+            if row["example_id"] in selected_ids:
+                continue
+            selected.append(
+                {
+                    "benchmark_id": f"{row['domain']}_benchmark_{len(selected) + 1:02d}",
+                    "domain": row["domain"],
+                    "example_id": row["example_id"],
+                    "source_doc_id": row.get("source_doc_id") or row["doc_id"],
+                    "doc_id": row["doc_id"],
+                    "user_prompt": row["messages"][1]["content"],
+                    "gold_output": row["messages"][2]["content"],
+                    "checklist": [
+                        "valid_json",
+                        "no_invented_facts",
+                        "correct_type_or_area",
+                        "no_cross_contaminated_fields",
+                        "captures_obvious_grounded_clauses",
+                    ],
+                }
+            )
+            if len(selected) >= limit:
+                break
     return selected
 
 

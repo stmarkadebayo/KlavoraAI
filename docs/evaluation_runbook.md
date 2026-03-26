@@ -1,73 +1,83 @@
 # Evaluation Runbook
 
-The evaluation path assumes you already ran inference and saved predictions as JSONL with at least:
+Every tutorial run should end with evaluation. Training without evaluation is not the default flow in this repo.
+
+Prediction files must contain at least:
 
 - `example_id`
 - `raw_output`
 
-If you already parsed the model output yourself, you can also include:
+If you already parsed the output, you can also include:
 
 - `parsed_output`
 
-## Build The Fixed Demo Benchmark
+## Build The Fixed 12-Example Benchmark
 
-Contract:
+Demo contract benchmark:
 
 ```bash
 python3 scripts/build_eval_benchmark.py \
-  --input data/processed/contract_main/test.jsonl \
+  --input data/demo/contract/test.jsonl \
   --output evaluation/benchmarks/contract_demo_benchmark.jsonl \
   --limit 12
 ```
 
-Policy:
+Demo policy benchmark:
 
 ```bash
 python3 scripts/build_eval_benchmark.py \
-  --input data/processed/policy_main/test.jsonl \
+  --input data/demo/policy/test.jsonl \
   --output evaluation/benchmarks/policy_demo_benchmark.jsonl \
   --limit 12
 ```
 
+Standard paths can use the processed `data/processed/.../test.jsonl` files instead.
+
 ## Evaluate Holdout Predictions
 
-Contract example:
+Contract demo example:
 
 ```bash
 python3 scripts/evaluate_extraction.py \
-  --gold data/processed/contract_main/test.jsonl \
-  --quality-report data/processed/contract_main/quality_report.json \
-  --system base=eval/predictions/contract_base.jsonl \
-  --system current_adapter=eval/predictions/contract_current_adapter.jsonl \
-  --system improved_adapter=eval/predictions/contract_improved_adapter.jsonl \
-  --output-dir evaluation/reports/contract_extract_v2_chunked_fulltext
+  --gold data/demo/contract/test.jsonl \
+  --quality-report data/demo/contract/quality_report.json \
+  --system qwen_demo=eval/predictions/contract_qwen_demo.jsonl \
+  --benchmark-predictions qwen_demo=eval/predictions/contract_qwen_demo_benchmark.jsonl \
+  --output-dir evaluation/reports/contract_qwen3_4b_demo
 ```
 
-Policy example:
+Policy demo example:
 
 ```bash
 python3 scripts/evaluate_extraction.py \
-  --gold data/processed/policy_main/test.jsonl \
-  --quality-report data/processed/policy_main/quality_report.json \
-  --system base=eval/predictions/policy_base.jsonl \
-  --system adapter=eval/predictions/policy_adapter.jsonl \
-  --output-dir evaluation/reports/policy_extract_v1_opp115
+  --gold data/demo/policy/test.jsonl \
+  --quality-report data/demo/policy/quality_report.json \
+  --system qwen_demo=eval/predictions/policy_qwen_demo.jsonl \
+  --benchmark-predictions qwen_demo=eval/predictions/policy_qwen_demo_benchmark.jsonl \
+  --output-dir evaluation/reports/policy_qwen3_4b_demo
 ```
+
+## Tutorial Acceptance
+
+The demo/tutorial path is acceptable when the newest evaluated system meets all of these:
+
+- JSON validity `>= 0.90`
+- schema parse success `>= 0.85`
+- unsupported top-level field hallucinations stay bounded
+- the 12-example benchmark does not look obviously broken
+
+## Standard Contract Promotion Gate
+
+The stronger contract gate remains:
+
+- JSON validity `>= 0.95`
+- response truncation risk rate `<= 0.05`
+- contract type accuracy `>= 0.80`
+- normalized date accuracy `>= 0.75`
+- manual benchmark hallucinated unsupported fields `<= 1`
 
 Outputs:
 
 - `report.json`
 - `report.md`
-- one per-example JSONL file per system
-
-## Contract Promotion Gate
-
-The default contract gate is:
-
-- JSON validity >= `0.95`
-- response truncation risk rate <= `0.05`
-- contract type accuracy >= `0.80`
-- normalized date accuracy >= `0.75`
-- manual benchmark hallucinated unsupported fields <= `1`
-
-Do not advance policy training as the main focus until contract clears that gate.
+- one per-example JSONL file per evaluated system

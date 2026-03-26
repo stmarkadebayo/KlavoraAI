@@ -39,6 +39,11 @@ PROMOTION_THRESHOLDS = {
     "normalized_date_accuracy": 0.75,
     "manual_benchmark_max_hallucinated_fields": 1,
 }
+TUTORIAL_THRESHOLDS = {
+    "json_validity_rate": 0.90,
+    "schema_parse_success_rate": 0.85,
+    "max_unsupported_field_hallucinations": 5,
+}
 
 
 def _read_jsonl(path: Path) -> list[dict]:
@@ -240,6 +245,38 @@ def _promotion_gate(metrics: dict[str, Any], benchmark_predictions: dict[str, di
     }
 
 
+def _tutorial_acceptance(metrics: dict[str, Any], benchmark_predictions: dict[str, dict[str, Any]] | None) -> dict[str, Any]:
+    top_level_fields = (
+        set(ContractExtraction.model_fields)
+        if "contract_type_accuracy" in metrics
+        else set(PolicyExtraction.model_fields)
+    )
+    benchmark_hallucinated_fields = 0
+    benchmark_examples_with_unknown_fields = 0
+    if benchmark_predictions:
+        for prediction in benchmark_predictions.values():
+            parsed = prediction.get("parsed_output")
+            if isinstance(parsed, dict):
+                extra = len(set(parsed.keys()) - top_level_fields)
+                benchmark_hallucinated_fields += extra
+                if extra:
+                    benchmark_examples_with_unknown_fields += 1
+
+    checks = {
+        "json_validity_rate": metrics["json_validity_rate"] >= TUTORIAL_THRESHOLDS["json_validity_rate"],
+        "schema_parse_success_rate": metrics["schema_parse_success_rate"] >= TUTORIAL_THRESHOLDS["schema_parse_success_rate"],
+        "unsupported_field_hallucination_count": metrics["unsupported_field_hallucination_count"]
+        <= TUTORIAL_THRESHOLDS["max_unsupported_field_hallucinations"],
+        "benchmark_not_obviously_broken": benchmark_examples_with_unknown_fields == 0,
+    }
+    return {
+        "passed": all(checks.values()),
+        "checks": checks,
+        "benchmark_hallucinated_fields": benchmark_hallucinated_fields,
+        "benchmark_examples_with_unknown_fields": benchmark_examples_with_unknown_fields,
+    }
+
+
 def _write_markdown_report(output_path: Path, systems: dict[str, dict[str, Any]]) -> None:
     lines = [
         "# Extraction Evaluation",
@@ -302,8 +339,9 @@ def main() -> int:
         "gold_path": args.gold,
         "systems": {name: payload["metrics"] for name, payload in systems_payload.items()},
     }
+    newest_system = next(reversed(systems_payload))
+    report["tutorial_acceptance"] = _tutorial_acceptance(systems_payload[newest_system]["metrics"], benchmark_predictions)
     if domain == "contract":
-        newest_system = next(reversed(systems_payload))
         report["promotion_gate"] = _promotion_gate(systems_payload[newest_system]["metrics"], benchmark_predictions)
 
     (output_dir / "report.json").write_text(json.dumps(report, indent=2, sort_keys=True), encoding="utf-8")
