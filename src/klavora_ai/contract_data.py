@@ -31,6 +31,17 @@ QUOTE_RE = re.compile(r"^[\"']+|[\"']+$")
 PARTY_KEY_RE = re.compile(r"[^a-z0-9]+")
 SECTION_BREAK_RE = re.compile(r"\n\s*\n+")
 SENTENCE_SPLIT_RE = re.compile(r"(?<=[.!?])\s+")
+PARTY_VERB_RE = re.compile(
+    r"\b(shall|must|agrees?|will|may|terminate|renew|pay|provide|maintain|submit|obtain|assign|governed)\b",
+    flags=re.I,
+)
+BETWEEN_PARTIES_RE = re.compile(
+    r"\bbetween\s+(?P<left>[^,\n]{2,100}?)\s+and\s+(?P<right>[^,\n]{2,100}?)(?:[\.,\n]|$)",
+    flags=re.I,
+)
+PARTY_ALIAS_RE = re.compile(r'"([^"]{1,40})"')
+MAX_PARTY_NAME_CHARS = 80
+MAX_PARTY_WORDS = 8
 
 LABEL_GROUPS = {
     "effective_date": {"Agreement Date", "Effective Date"},
@@ -89,6 +100,53 @@ def _collapse_party_names(items: Iterable[str]) -> list[str]:
     return list(chosen.values())
 
 
+def _looks_like_party_name(value: str) -> bool:
+    cleaned = _normalize_party_name(value)
+    if not cleaned:
+        return False
+    if len(cleaned) > MAX_PARTY_NAME_CHARS:
+        return False
+    words = cleaned.split()
+    if len(words) > MAX_PARTY_WORDS:
+        return False
+    if PARTY_VERB_RE.search(cleaned):
+        return False
+    if any(token in cleaned for token in [":", ";", "?", "!", "=", "$", "%"]):
+        return False
+    lowered = cleaned.lower()
+    if any(
+        phrase in lowered
+        for phrase in [
+            "agreement",
+            "contract",
+            "statement of work",
+            "promotion",
+            "affiliate office",
+            "joint venture",
+            "license",
+        ]
+    ):
+        return False
+    alpha_chars = [char for char in cleaned if char.isalpha()]
+    if not alpha_chars:
+        return False
+    if sum(char.islower() for char in alpha_chars) > 0 and cleaned.upper() == cleaned:
+        return True
+    if cleaned.istitle():
+        return True
+    if any(suffix in cleaned.lower() for suffix in [" inc", " llc", " ltd", " corp", " corporation", " company", " plc", " s.p.a"]):
+        return True
+    if len(words) <= 3 and all(word[:1].isupper() for word in words if word):
+        return True
+    return cleaned.isupper()
+
+
+def _header_window(text: str) -> str:
+    lines = [line.strip() for line in text.splitlines()[:20] if line.strip()]
+    header = "\n".join(lines)
+    return header[:1200]
+
+
 def infer_contract_type(title: str, raw_text: str) -> str:
     combined = f"{title}\n{raw_text[:2000]}".lower()
     if "master services agreement" in combined or re.search(r"\bmsa\b", combined):
@@ -124,15 +182,28 @@ def _extract_dates(text: str) -> list[str]:
 
 
 def _extract_parties_from_text(text: str) -> list[str]:
-    quoted = re.findall(r'"([^"]+)"', text)
+    header = _header_window(text)
+    quoted = [match for match in PARTY_ALIAS_RE.findall(header) if _looks_like_party_name(match)]
     uppercase_lines = []
-    for line in text.splitlines():
+    title_lines = []
+    for line in header.splitlines():
         normalized = line.strip()
-        if normalized and normalized.upper() == normalized and any(char.isalpha() for char in normalized):
+        if not normalized:
+            continue
+        if normalized.upper() == normalized and any(char.isalpha() for char in normalized) and _looks_like_party_name(normalized):
             uppercase_lines.append(normalized)
-    candidates = quoted + uppercase_lines
-    if " and " in text.lower():
-        candidates.extend(part.strip() for part in re.split(r"\band\b", text, flags=re.I))
+        elif _looks_like_party_name(normalized):
+            title_lines.append(normalized)
+
+    between_match = BETWEEN_PARTIES_RE.search(header)
+    between_candidates: list[str] = []
+    if between_match:
+        between_candidates = [
+            between_match.group("left").strip(),
+            between_match.group("right").strip(),
+        ]
+
+    candidates = quoted + uppercase_lines + title_lines + between_candidates
     return _collapse_party_names(candidates)
 
 
