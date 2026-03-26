@@ -1,0 +1,42 @@
+run_name: policy_extract_qwen3_4b_demo
+domain: policy
+tier: demo
+model_name: unsloth/Qwen3-4B
+dataset:
+  train_path: data/demo/policy/train.jsonl
+  val_path: data/demo/policy/val.jsonl
+  test_path: data/demo/policy/test.jsonl
+output_dir: training/outputs/policy_extract_qwen3_4b_demo
+adapter_output_dir: adapters/policy/policy_extract_qwen3_4b_demo
+max_seq_length: 1024
+load_in_4bit: true
+full_finetuning: false
+seed: 3407
+chat_template: chatml
+response_only: true
+response_only_instruction_part: "<|im_start|>user\n"
+response_only_response_part: "<|im_start|>assistant\n"
+preflight_max_removed_fraction: 0.1
+preflight_max_p95_tokens: 1100
+lora:
+  r: 8
+  alpha: 16
+  dropout: 0.0
+  bias: none
+  gradient_checkpointing: unsloth
+trainer:
+  max_length: 1024
+  per_device_train_batch_size: 1
+  per_device_eval_batch_size: 1
+  gradient_accumulation_steps: 4
+  warmup_ratio: 0.1
+  num_train_epochs: 1
+  learning_rate: 0.0002
+  weight_decay: 0.01
+  logging_steps: 10
+  eval_steps: 50
+  save_steps: 100
+  max_steps: -1
+  optim: adamw_8bit
+  lr_scheduler_type: cosine
+  packing: false
