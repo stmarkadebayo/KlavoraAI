@@ -151,3 +151,32 @@ The tutorial acceptance bar is lighter than the standard promotion gate:
 - The default path is optimized for free Colab reliability, not SOTA quality.
 - The strongest quality lever in this repo is filtered extraction data plus disciplined evaluation.
 - Summary tuning is intentionally out of scope for the default tutorial path.
+
+
+ one of the side goals of this project is to have the following projects: So here are 4 skills + projects that will actually prepare you for that AI/ML role you’re eyeing 👀
+
+1️⃣ 𝗙𝗶𝗻𝗲-𝗧𝘂𝗻𝗶𝗻𝗴 𝗢𝗽𝗲𝗻 𝗟𝗟𝗠𝘀 𝘄𝗶𝘁𝗵 𝗟𝗼𝗥𝗔/𝗤𝗟𝗼𝗥𝗔 🗂️
+Project: Take an open model like Qwen, Gemma, or Llama and adapt it for a narrow task like legal clause extraction or domain-specific summarization. 
+
+🔥 This shows you understand model adaptation, dataset preparation, task-specific tuning, and how to make open models useful for actual business workflows.
+
+—————
+
+2️⃣ 𝗠𝗼𝗱𝗲𝗹 𝗗𝗲𝗽𝗹𝗼𝘆𝗺𝗲𝗻𝘁 ☁️
+Project: Deploy a self-hosted LLM API for inference.
+
+Do not stop at “𝑰 𝒓𝒂𝒏 𝒕𝒉𝒆 𝒎𝒐𝒅𝒆𝒍 𝒍𝒐𝒄𝒂𝒍𝒍𝒚.”
+Serve it properly, expose it through an API, add streaming, test concurrency, and make it usable inside a real application.
+
+🔥 This shows you understand inference serving, APIs, deployment environment
+
+A lot of people can build AI demos. Far fewer can version datasets, track experiments, test changes, evaluate outputs, monitor failures, and improve systems after deployment.
+
+🔥 This project shows you understand 𝐫𝐞𝐥𝐢𝐚𝐛𝐢𝐥𝐢𝐭𝐲, 𝐨𝐛𝐬𝐞𝐫𝐯𝐚𝐛𝐢𝐥𝐢𝐭𝐲, 𝐚𝐧𝐝 𝐜𝐨𝐧𝐭𝐢𝐧𝐮𝐨𝐮𝐬 𝐢𝐦𝐩𝐫𝐨𝐯𝐞𝐦𝐞𝐧𝐭.
+
+—————
+
+4️⃣ 𝗖𝗼𝘀𝘁 𝗮𝗻𝗱 𝗟𝗮𝘁𝗲𝗻𝗰𝘆 𝗢𝗽𝘁𝗶𝗺𝗶𝘇𝗮𝘁𝗶𝗼𝗻 𝗳𝗼𝗿 𝗟𝗟𝗠 𝗦𝘆𝘀𝘁𝗲𝗺𝘀 ⚖️
+Project: Benchmark and optimize an LLM stack for speed, quality, and cost.
+
+𝘗𝘳𝘰𝘥𝘶𝘤𝘵𝘪𝘰𝘯 𝘈𝘐 𝘪𝘴 𝘯𝘰𝘵 𝘫𝘶𝘴𝘵 𝘢𝘣𝘰𝘶𝘵 𝘨𝘦𝘵𝘵𝘪𝘯𝘨 𝘵𝘩𝘦 𝘣𝘦𝘴𝘵 𝘰𝘶𝘵𝘱𝘶𝘵❌. Tradeoffs based on model speeds, performance, and how much each workflow costs at scale are equally important. 🔥 . and the plan was to lora or qlora finetune a model on contract and policy. where the weights fine tuned for contract are selectively different from the ones to be updated for policy. then the next step would be to somehow deploy the model for inference, whatevr and however that means. then do 𝗖𝗼𝘀𝘁 𝗮𝗻𝗱 𝗟𝗮𝘁𝗲𝗻𝗰𝘆 𝗢𝗽𝘁𝗶𝗺𝗶𝘇𝗮𝘁𝗶𝗼𝗻 𝗳𝗼𝗿 the llm system. basically knocking out 3 out of the 4 projects. make sense?
