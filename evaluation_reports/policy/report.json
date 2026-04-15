@@ -1,0 +1,43 @@
+{
+  "domain": "policy",
+  "gold_path": "data/demo/policy/test.jsonl",
+  "systems": {
+    "qwen3_4b": {
+      "examples": 64,
+      "json_validity_rate": 1.0,
+      "normalized_date_accuracy": 1.0,
+      "policy_area_accuracy": 1.0,
+      "presence_metrics": {
+        "applies_to": {
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "key_obligations": {
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "required_actions": {
+          "precision": 1.0,
+          "recall": 1.0
+        },
+        "risk_flags": {
+          "precision": 1.0,
+          "recall": 1.0
+        }
+      },
+      "schema_parse_success_rate": 1.0,
+      "unsupported_field_hallucination_count": 0
+    }
+  },
+  "tutorial_acceptance": {
+    "benchmark_examples_with_unknown_fields": 0,
+    "benchmark_hallucinated_fields": 0,
+    "checks": {
+      "benchmark_not_obviously_broken": true,
+      "json_validity_rate": true,
+      "schema_parse_success_rate": true,
+      "unsupported_field_hallucination_count": true
+    },
+    "passed": true
+  }
+}
