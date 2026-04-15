@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  vllm-server:
+    build: .
+    image: klavoraai-vllm:latest
+    container_name: klavoraai-vllm
+    ports:
+      - "8000:8000"
+    environment:
+      - MODEL_NAME=${MODEL_NAME}
+      - ADAPTER_PATH=${ADAPTER_PATH}
+      - PORT=8000
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia.com/gpu
+              count: 1
+              capabilities: [gpu]
+    command: >
+      python3 -m uvicorn api_server:app --host 0.0.0.0 --port 8000
+
+  benchmark:
+    image: klavoraai-vllm:latest
+    container_name: klavoraai-benchmark
+    depends_on:
+      - vllm-server
+    environment:
+      - API_BASE=http://vllm-server:8000
+      - MODEL_NAME=${MODEL_NAME}
+    command: python3 benchmark.py
